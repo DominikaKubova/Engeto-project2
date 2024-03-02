@@ -20,7 +20,7 @@ def introduction():
     print(SEPARATOR)
     print("I have generated a random 4-digit number for you.\nLet's play!.")    
 
-def random_number():
+def random_number() -> str:
     """Generates random 4 digit number with no duplicities"""
     number = str(random.randint(1000 , 9999))
     while len(set(number)) != 4: 
@@ -47,10 +47,10 @@ def hint(number: str, guessed_numbers: list):
         else:
             print("OK, keep trying!")
 
-def player_guess_check(guess: str):
+def player_guess_check(guess: str) -> bool:
     """
     Checks the input from the player. If the format is not correct, message assigned to the problem is shown.
-    If the format is correct game continues.
+    If the format is correct game continues. Function returns True if the format is correct, otherwise False.
 
     Keyword arguments:
     guess -- input from the player
@@ -58,11 +58,16 @@ def player_guess_check(guess: str):
     guess_list = [i for i in guess]
     if guess_list[0] == "0":
         print("The 4-digit number can not start with 0.")
+        return False
     if not guess.isdigit(): 
         print("The inserted guess is not in a valid format!")
+        return False
     if len(guess) != 4 and guess.isdigit():
         digits_of_guess = len(guess)
-        print("The number has to contain 4-digits. Your guess conatins", digits_of_guess, "digits.")
+        print("The number has to contain 4-digits. Your guess conatins", digits_of_guess, "digits.")   
+        return False
+    #if not guess.isnumeric() or not int(guess) in range(1000 , 9999):
+    return True     
 
 def player_guess_valid(number: str, guess: str, guessed_numbers: list):
     """If player's guess is in valid format, check if the guess has already been tried,
@@ -73,12 +78,11 @@ def player_guess_valid(number: str, guess: str, guessed_numbers: list):
     guess -- input from the player
     guessed_numbers -- list of already used valid guesses
     """
-    if guess.isnumeric() and int(guess) in range(1000 , 9999):
-        if guess not in guessed_numbers:
-            bulls_cows_count(guess, number)
-            guessed_numbers.append(guess)
-        else:
-            print("You have already tried this number.")
+    if guess not in guessed_numbers:
+        bulls_cows_count(guess, number)
+        guessed_numbers.append(guess)
+    else:
+        print("You have already tried this number.")
      
 def bulls_cows_count(guess: str, number: str):
     """
@@ -117,7 +121,9 @@ def game():
     while guess != number: 
         hint(number, guessed_numbers)    
         guess = input("Enter a 4-digit number: ")
-        player_guess_check( guess)
+    
+        if not player_guess_check(guess):
+            continue
         player_guess_valid(number, guess, guessed_numbers)
         
     print("Congratulations, the number", guess, "is the correct guess! You won in", len(guessed_numbers), "attempts.")
