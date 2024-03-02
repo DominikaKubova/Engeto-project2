@@ -66,7 +66,6 @@ def player_guess_check(guess: str) -> bool:
         digits_of_guess = len(guess)
         print("The number has to contain 4-digits. Your guess conatins", digits_of_guess, "digits.")   
         return False
-    #if not guess.isnumeric() or not int(guess) in range(1000 , 9999):
     return True     
 
 def player_guess_valid(number: str, guess: str, guessed_numbers: list):
